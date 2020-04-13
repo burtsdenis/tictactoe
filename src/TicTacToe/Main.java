@@ -13,14 +13,15 @@ public class Main {
         System.out.print("Enter name for player №" + Player.playersCount + ": ");
         Player player2 = new Player(reader.readLine(),"O");
 
-        TicTacToe game1 = new TicTacToe(5);
+        TicTacToe game1 = new TicTacToe(3);
         game1.initializeGame(player1,player2);
 
         while (true) {
             System.out.print("Enter x: ");
-            int x = Integer.parseInt(reader.readLine());
+
+            int x = checkInt(reader.readLine());
             System.out.print("Enter y: ");
-            int y = Integer.parseInt(reader.readLine());
+            int y = checkInt(reader.readLine());
 
             if (!game1.checkInput(x, y)) continue;
             if (!game1.turnAllowed(x, y)) continue;
@@ -32,6 +33,16 @@ public class Main {
                 if (game1.makeATurn(x,y,player2)) { System.out.println(player2.name + " wins!"); break; }
             }
         }
-
     }
+
+    public static int checkInt(String digit) {
+        try {
+            return Integer.parseInt(digit);
+        } catch (NumberFormatException e) {
+        }
+        System.out.println("Your input is incorrect, values must Integer!");
+        return 0;
+    }
+
 }
+

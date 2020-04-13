@@ -41,7 +41,7 @@ public class TicTacToe {
             if (x <= gamingBoard.length - 1 && y <= gamingBoard.length - 1) {
                 return true;
             }
-        } catch (ArrayIndexOutOfBoundsException | NumberFormatException e) {
+        } catch (ArrayIndexOutOfBoundsException e) {
             System.out.println("Error: " + e);
 
         }
@@ -54,7 +54,7 @@ public class TicTacToe {
         printGameBoard();
         boolean winner = false;
 
-        for (int i = 0; i < gamingBoard.length; i++) {
+        for (int i = 0; i < gamingBoard[i].length; i++) {
             if (!gamingBoard[x][i].equals(player.playingMark))
                 break;
             if (i == gamingBoard.length - 1) {
