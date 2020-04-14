@@ -43,7 +43,7 @@ public class Main {
                     System.out.println(player1.name + " wins!");
                     break;
                 }
-            } else if (TicTacToe.turnNumber % 2 == 0) {
+            } else {
                 if (game1.makeATurn(x, y, player2)) {
                     System.out.println(player2.name + " wins!");
                     break;
