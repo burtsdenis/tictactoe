@@ -9,7 +9,7 @@ public class TicTacToe {
         gamingBoard = new String[n][n];
     }
 
-    public void initializeGame(Player player1, Player player2) {
+    void initializeGame(Player player1, Player player2) {
         for (int i = 0; i < gamingBoard.length; i++) {
             for (int j = 0; j < gamingBoard.length; j++) {
                 gamingBoard[i][j] = "-";
@@ -18,7 +18,7 @@ public class TicTacToe {
         printGameBoard();
     }
 
-    public void printGameBoard() {
+    void printGameBoard() {
         for (int i = 0; i < gamingBoard.length; i++) {
             for (int j = 0; j < gamingBoard.length; j++) {
                 System.out.print(gamingBoard[i][j]);
@@ -27,7 +27,7 @@ public class TicTacToe {
         }
     }
 
-    public boolean turnAllowed(int x, int y) {
+    boolean turnAllowed(int x, int y) {
         if (gamingBoard[x][y].equals("-")) {
             return true;
         } else {
@@ -36,7 +36,7 @@ public class TicTacToe {
         }
     }
 
-    public boolean checkInput(int x, int y) {
+    boolean checkInput(int x, int y) {
         try {
             if (x <= gamingBoard.length - 1 && y <= gamingBoard.length - 1) {
                 return true;
@@ -49,7 +49,7 @@ public class TicTacToe {
         return false;
     }
 
-    public boolean makeATurn(int x, int y, @NotNull Player player) {
+    boolean makeATurn(int x, int y, @NotNull Player player) {
         gamingBoard[x][y] = player.playingMark;
         printGameBoard();
         boolean winner = false;
