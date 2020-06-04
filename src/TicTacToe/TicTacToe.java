@@ -1,94 +1,144 @@
 package TicTacToe;
-import org.jetbrains.annotations.NotNull;
+
+import static TicTacToe.Main.scan;
+import static TicTacToe.UI.initGameBoard;
+import static TicTacToe.UI.printGameBoard;
+
 
 public class TicTacToe {
-    static int turnNumber = 0;
-    String[][] gamingBoard;
+    private static int turnNumber = 0;
+    public static char EMPTY = ' ';
+    public static int BOARD_SIZE = 3;
+    public static String GAME_MODE;
+    public static char[][] gameBoard = new char[BOARD_SIZE][BOARD_SIZE];
 
-    public TicTacToe(int n) {
-        gamingBoard = new String[n][n];
+    public static void initializeGame() {
+        System.out.println("Choose game mode:\n1. Player vs Player\n2. Player vs Computer (will be in next versions)\n");
+        System.out.print("Game mode (1/2): ");
+        GAME_MODE = scan.next();
+
+        switch (GAME_MODE) {
+            case "1":
+                System.out.print("Enter name for player №" + Player.playersCount + ": ");
+                Player player1 = new Player(scan.next(), 'X');
+                System.out.print("Enter name for player №" + Player.playersCount + ": ");
+                Player player2 = new Player(scan.next(), 'O');
+                initGameBoard();
+                pvpGame(player1, player2);
+                break;
+            case "2":
+                break;
+//            System.out.print("Enter your name: " + Player.playersCount + ": ");
+//            Player player = new Player(scan.next(), 'X');
+//            initGameBoard();
+//            pvcGame(player);
+        }
+
+
     }
 
-    void initializeGame(Player player1, Player player2) {
-        for (int i = 0; i < gamingBoard.length; i++) {
-            for (int j = 0; j < gamingBoard.length; j++) {
-                gamingBoard[i][j] = "-";
+    static void pvpGame(Player player1, Player player2) {
+        while (true) {
+            System.out.println("Turn number is: " + (turnNumber + 1) + "\nIt's " + (turnNumber % 2 == 0 ? player1.name : player2.name) + "'s turn!");
+            printGameBoard();
+            System.out.print("Enter the x and y divided by space: ");
+            int x;
+            int y;
+            try {
+
+                x = Integer.parseInt(scan.next());
+                y = Integer.parseInt(scan.next());
+            } catch (NumberFormatException e) {
+                System.out.println("Your input is incorrect, both values must be integer!");
+                continue;
+            }
+            if (checkInput(x, y) && turnAllowed(x, y)) {
+                if (turnNumber % 2 == 0) {
+                    makeTurn(x, y, player1);
+                } else {
+                    makeTurn(x, y, player2);
+                }
+                turnNumber++;
             }
         }
-        printGameBoard();
     }
 
-    void printGameBoard() {
-        for (int i = 0; i < gamingBoard.length; i++) {
-            for (int j = 0; j < gamingBoard.length; j++) {
-                System.out.print(gamingBoard[i][j]);
+    static void pvcGame(Player player) {
+
+    }
+
+    static void makeTurn(int x, int y, Player player) {
+        gameBoard[x][y] = player.playingMark;
+
+        if (turnNumber > BOARD_SIZE) {
+            if (checkWinner(x, y, player)) {
+                printGameBoard();
+                System.out.println("Player " + player.name + " wins!");
+                System.exit(0);
             }
-            System.out.println();
+        }
+
+        if (turnNumber > (BOARD_SIZE * BOARD_SIZE - 1)) {
+            if (checkDraw()) {
+                System.out.println("Draw!");
+                System.exit(0);
+            }
         }
     }
 
-    boolean turnAllowed(int x, int y) {
-        if (gamingBoard[x][y].equals("-")) {
+    static boolean turnAllowed(int x, int y) {
+        if (gameBoard[x][y] != EMPTY) {
+            System.out.println("This field is already taken.\nChoose another field!");
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    static boolean checkInput(int x, int y) {
+        if (x <= BOARD_SIZE - 1 && y <= BOARD_SIZE - 1) {
             return true;
         } else {
-            System.out.println("Choose another field!");
+            System.out.println("Your input is incorrect, values must be between 0 and " + (BOARD_SIZE - 1));
             return false;
         }
     }
 
-    boolean checkInput(int x, int y) {
-        try {
-            if (x <= gamingBoard.length - 1 && y <= gamingBoard.length - 1) {
-                return true;
-            }
-        } catch (ArrayIndexOutOfBoundsException e) {
-            System.out.println("Error: " + e);
+    static boolean checkWinner(int x, int y, Player player) {
 
+        boolean horizontal = true;
+        boolean vertical = true;
+        boolean mainDiagonal = true;
+        boolean secondaryDiagonal = true;
+        for (int i = 0; i < BOARD_SIZE; i++) {
+            if (gameBoard[x][i] != player.playingMark) {
+                vertical = false;
+            }
+
+            if (gameBoard[i][y] != player.playingMark) {
+                horizontal = false;
+            }
+
+            if (gameBoard[i][i] != player.playingMark) {
+                mainDiagonal = false;
+            }
+
+            if (gameBoard[i][(BOARD_SIZE - 1) - i] != player.playingMark) {
+                secondaryDiagonal = false;
+            }
         }
-        System.out.println("Your input is incorrect, values must be between 0 and 2");
-        return false;
+        return horizontal || vertical || mainDiagonal || secondaryDiagonal;
     }
 
-    boolean makeATurn(int x, int y, @NotNull Player player) {
-        gamingBoard[x][y] = player.playingMark;
-        printGameBoard();
-        boolean winner = false;
 
-        for (int i = 0; i < gamingBoard[i].length; i++) {
-            if (!gamingBoard[x][i].equals(player.playingMark))
-                break;
-            if (i == gamingBoard.length - 1) {
-                winner = true;
+
+    static boolean checkDraw() {
+        for (int i = 0; i < BOARD_SIZE; i++) {
+            for (int j = 0; j < BOARD_SIZE; j++) {
+                if (gameBoard[i][j] == EMPTY) return false;
             }
         }
-
-        for (int i = 0; i < gamingBoard.length; i++) {
-            if (!gamingBoard[i][y].equals(player.playingMark))
-                break;
-            if (i == gamingBoard.length - 1) {
-                winner = true;
-            }
-        }
-
-        if (x == y) {
-            for (int i = 0; i < gamingBoard.length; i++) {
-                if (!gamingBoard[i][i].equals(player.playingMark))
-                    break;
-                if (i == gamingBoard.length - 1) {
-                    winner = true;
-                }
-            }
-        }
-
-        if (x + y == gamingBoard.length - 1) {
-            for (int i = 0; i < gamingBoard.length; i++) {
-                if (!gamingBoard[i][(gamingBoard.length - 1) - i].equals(player.playingMark))
-                    break;
-                if (i == gamingBoard.length - 1) {
-                    winner = true;
-                }
-            }
-        }
-        return winner;
+        return true;
     }
+
 }

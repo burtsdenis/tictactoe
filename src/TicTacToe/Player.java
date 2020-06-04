@@ -2,10 +2,10 @@ package TicTacToe;
 
 public class Player {
     String name;
-    String playingMark;
+    char playingMark;
     static int playersCount = 0;
 
-    public Player(String name, String playingMark) {
+    public Player(String name, char playingMark) {
         playersCount++;
         this.name = name;
         this.playingMark = playingMark;
